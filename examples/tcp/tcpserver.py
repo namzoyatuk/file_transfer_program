@@ -39,4 +39,5 @@ with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as s:
 
             conn.send(md5_hash.encode())
 
-            conn.sendall(file_data)
+            for i in range(0, len(file_data), 1024):
+                conn.send(file_data[i:i + 1024])
