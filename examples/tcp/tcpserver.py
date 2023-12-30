@@ -20,24 +20,26 @@ with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as s:
                 break
 
             file_num_in_string = data.decode()
-            filepath = '/root/objects/large-' + file_num_in_string + '.obj'
+            filepath = '/root/objects/large-' + file_num_in_string + '.obj' #create the file path to read
             print(f"Sending file at {filepath}")
             print(f"Sending object number: {file_num_in_string}")
             md5_path = filepath + '.md5'
 
+            # read the file data
             with open(filepath, 'rb') as f:
                 file_data = f.read()
 
-            calculated_hash = hashlib.md5(file_data).hexdigest()
-            print(f"Calculated hash at the server: {calculated_hash}")
-
+            # send file size
             file_size = str(len(file_data)).encode()
             conn.send(file_size)
 
+            # read the md5 hash
             with open(md5_path, 'r') as f:
                 md5_hash = f.read()
 
+            # send the md5_hash stored in the server
             conn.send(md5_hash.encode())
 
+            # send data in chunks of 1024 bytes
             for i in range(0, len(file_data), 1024):
                 conn.send(file_data[i:i + 1024])
