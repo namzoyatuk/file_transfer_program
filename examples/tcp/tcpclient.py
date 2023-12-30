@@ -33,6 +33,6 @@ while file_number.lower().strip() != 'bye':
     else:
         print(f"File {file_number} received successfully ")
 
-    message = input(" -> ")  # again take input
+    file_number = input(" -> ")  # again take input
 
 client_socket.close()  # close the connection
