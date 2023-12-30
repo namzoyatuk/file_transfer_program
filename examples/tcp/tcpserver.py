@@ -17,4 +17,20 @@ with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as s:
             data = conn.recv(1024)
             if not data:
                 break
-            conn.sendall(data)
+
+            file_num_in_string = data.decode()
+            filepath = '/root/objects/small-' + file_num_in_string + '.obj'
+            md5_path = filepath + '.md5'
+
+            with open(filepath, 'rb') as f:
+                file_data = f.read()
+
+            file_size = str(len(file_data)).encode()
+            conn.send(file_size)
+
+            with open(md5_path, 'r') as f:
+                md5_hash = f.read()
+
+            conn.send(md5_hash.encode())
+
+            conn.sendall(file_data)

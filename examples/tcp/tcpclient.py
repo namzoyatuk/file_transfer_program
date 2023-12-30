@@ -1,6 +1,7 @@
 # echo-client.py
 
 import socket
+import hashlib
 HOST = socket.gethostbyname("server")  # Use this if you are using docker compose
 # if you do not use docker compose, instead of resolving name
 # set host to the ip address directly
@@ -10,13 +11,19 @@ PORT = 8000  # socket server port number
 client_socket = socket.socket()  # instantiate
 client_socket.connect((HOST, PORT))  # connect to the server
 
-message = input(" -> ")  # take input
+file_number = input(" -> ")  # take input
 
-while message.lower().strip() != 'bye':
-    client_socket.send(message.encode())  # send message
-    data = client_socket.recv(1024).decode()  # receive response
+while file_number.lower().strip() != 'bye':
+    client_socket.send(file_number.encode())            # send which file to get
+    file_size = int(client_socket.recv(1024).decode())  # receive file_size
+    received_hash = client_socket.recv(1024).decode()   # receive md5 hash
+    file_data = client_socket.recv(file_size)           # receive file
 
-    print('Received from server: ' + data)  # show in terminal
+    calculated_hash = hashlib.md5(file_data).hexdigest()
+
+    if calculated_hash != received_hash:
+        print(f"File {file_number} integrity check failed")
+
 
     message = input(" -> ")  # again take input
 
