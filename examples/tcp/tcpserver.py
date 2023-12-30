@@ -20,6 +20,8 @@ with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as s:
 
             file_num_in_string = data.decode()
             filepath = '/root/objects/small-' + file_num_in_string + '.obj'
+            print(f"Sending file at {filepath}")
+            print(f"Sending object number: {file_num_in_string}")
             md5_path = filepath + '.md5'
 
             with open(filepath, 'rb') as f:

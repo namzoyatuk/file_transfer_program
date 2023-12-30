@@ -16,10 +16,13 @@ file_number = input(" -> ")  # take input
 while file_number.lower().strip() != 'bye':
     client_socket.send(file_number.encode())            # send which file to get
     file_size = int(client_socket.recv(1024).decode())  # receive file_size
+    print(f"Received file size: {file_size}")
     received_hash = client_socket.recv(1024).decode()   # receive md5 hash
+    print(f"Received md5 hash {received_hash}")
     file_data = client_socket.recv(file_size)           # receive file
 
     calculated_hash = hashlib.md5(file_data).hexdigest()
+    print(f"Calculated md5 hash {calculated_hash}")
 
     if calculated_hash != received_hash:
         print(f"File {file_number} integrity check failed")
