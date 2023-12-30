@@ -19,7 +19,7 @@ while file_number.lower().strip() != 'bye':
     print(f"Received file size: {file_size}")
     received_hash = client_socket.recv(1024).decode()   # receive md5 hash
     print(f"Received md5 hash {received_hash}")
-    file_data = client_socket.recv(file_size)           # receive file
+    file_data = client_socket.recv(file_size).decode()   # receive file
 
     calculated_hash = hashlib.md5(file_data).hexdigest()
     print(f"Calculated md5 hash {calculated_hash}")
