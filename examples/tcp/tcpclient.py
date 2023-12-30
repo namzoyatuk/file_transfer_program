@@ -30,7 +30,8 @@ while file_number.lower().strip() != 'bye':
 
     if calculated_hash != received_hash:
         print(f"File {file_number} integrity check failed")
-
+    else:
+        print(f"File {file_number} received successfully ")
 
     message = input(" -> ")  # again take input
 
