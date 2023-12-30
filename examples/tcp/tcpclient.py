@@ -18,7 +18,7 @@ while file_number.lower().strip() != 'bye':
     file_size = int(client_socket.recv(1024).decode())  # receive file_size
     print(f"Received file size: {file_size}")
     received_hash = client_socket.recv(1024).decode()   # receive md5 hash
-    print(f"Received md5 hash {received_hash}")
+
 
     file_data = b''
     while len(file_data) < file_size:
@@ -27,6 +27,7 @@ while file_number.lower().strip() != 'bye':
 
     calculated_hash = hashlib.md5(file_data).hexdigest()
     print(f"Calculated md5 hash {calculated_hash}")
+    print(f"Received md5 hash {received_hash}")
 
     if calculated_hash != received_hash:
         print(f"File {file_number} integrity check failed")
