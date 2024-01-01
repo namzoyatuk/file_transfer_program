@@ -25,6 +25,8 @@ while file_number.lower().strip() != 'bye':
         chunk = client_socket.recv(1024)
         file_data += chunk                                      # receive file in chunks
 
+    print(f"File {file_number} have been received but not checked for integrity")
+
     calculated_hash = hashlib.md5(file_data).hexdigest()        # calculate the hash of
     print(f"Calculated md5 hash {calculated_hash}")             # received file
 
