@@ -64,8 +64,7 @@ def UDP_sender(file_path, client_addr):
 
         # Start sending packets
         while packets_to_send or send_base < seq:
-            lowest_seq_number = packets_to_send[0][0]
-            while packets_to_send and send_base + window_size > lowest_seq_number:
+            while packets_to_send and send_base + window_size > packets_to_send[0][0]:
                 packet_seq, packet = packets_to_send.pop(0)
                 send_packet(packet, client_addr)
                 print(f"Sent packet {packet_seq}")
