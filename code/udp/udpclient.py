@@ -11,52 +11,67 @@ bufferSize = 1024
 UDPClientSocket = socket.socket(family=socket.AF_INET, type=socket.SOCK_DGRAM)
 serverAddressPort = (serverIP, serverPort)
 
-# Send initial hello message to server to initiate transfer
-helloMessage = "Hello"
-UDPClientSocket.sendto(helloMessage.encode(), serverAddressPort)
 
-# Prepare to receive file
-received_packets = {}
-expected_seq = 0
-file_data = []
+def receive_file():
+    received_packets = {}
+    expected_seq = 0
+    file_data = []
+    file_name = None
 
-try:
     while True:
-        # Receive packet from the server
         message, address = UDPClientSocket.recvfrom(bufferSize)
         packet = message.decode()
 
-        # Check for the end of the file transfer
+        # check if it is the end of file
         if packet == 'END':
-            print("File transfer completed.")
+            print(f"File transfer completed for {file_name}")
             break
 
-        # Extract sequence number and data from the packet
-        seq, data = packet.split(':', 1)
-        seq = int(seq)
 
-        # Send acknowledgment back to the server
-        UDPClientSocket.sendto(str(seq).encode(), address)
+        try:
+            seq, data = packet.split(':', 1)
+            seq = int(seq)
 
-        # If this is the next expected packet, save the data
-        if seq == expected_seq:
-            file_data.append(data)
-            expected_seq += 1
-
-            # Check for any buffered packets
-            while expected_seq in received_packets:
-                file_data.append(received_packets.pop(expected_seq))
+            # if this is the next expected packet, save the data
+            if seq == expected_seq:
+                file_data.append(data)
                 expected_seq += 1
+
+                # check for any buffered packets
+                while expected_seq in received_packets:
+                    file_data.append(received_packets.pop(expected_seq))
+                    expected_seq += 1
+
+            else:
+                # buffer out-of-order packets
+                received_packets[seq] = data
+
+            UDPClientSocket.sendto(str(seq).encode(), address)
+
+        except ValueError:
+            # if not a data a packet
+            if packet.startswith('FILENAME:'):
+                file_name = packet.split(':', 1)[1]
+            else:
+                print(f"Received an unexpected message: {packet}")
+
+    return file_name, file_data
+
+
+while True:
+    # request specific file number
+    file_number = input("Enter the file number: ")
+    UDPClientSocket.sendto(file_number.encode(), serverAddressPort)
+
+    for _ in range(2):
+        file_name, file_data = receive_file()
+
+        if file_name:
+            # Save the received data to a file
+            with open(file_name, 'wb') as f:
+                for data in file_data:
+                    f.write(data.encode())
+            print(f"Received file saved as '{file_name}'")
         else:
-            # Buffer out-of-order packets
-            received_packets[seq] = data
+            print("No file name received.")
 
-except KeyboardInterrupt:
-    print("File transfer interrupted.")
-
-finally:
-    # Save the received data to a file
-    with open('receivedudp.obj', 'w') as f:
-        for data in file_data:
-            f.write(data)
-    print("Received file saved as 'receivedudp2.obj'")
