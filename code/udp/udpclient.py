@@ -35,7 +35,10 @@ try:
     while True:
         # Receive packet from the server
         if small_and_large == 2:
+            # a flag for both small and large object has been sent and
+            # asks for new file input
             first_file_name = input("Please enter the file number: ")
+            UDPClientSocket.sendto(first_file_name.encode(), serverAddressPort) # a random message to kill daemon thread
             UDPClientSocket.sendto(first_file_name.encode(), serverAddressPort)
             small_and_large = 0
 
