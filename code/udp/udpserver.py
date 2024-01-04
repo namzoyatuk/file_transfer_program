@@ -105,5 +105,5 @@ print("Waiting for incoming connection...")
 data, addr = UDPServerSocket.recvfrom(bufferSize)
 if data.decode() == 'Hello':
     print(f"Connection established with {addr}")
-    file_list = ['/root/objects/large-5.obj', "'/root/objects/small-5.obj'"]  # Add paths to your files
+    file_list = ['/root/objects/large-5.obj', '/root/objects/small-5.obj']  # Add paths to your files
     handle_multiple_transfers(file_list, addr)
