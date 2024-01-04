@@ -1,3 +1,5 @@
+#udpserver.py
+
 import socket
 import threading
 import time
@@ -26,17 +28,24 @@ def send_packet(packet, addr):
     UDPServerSocket.sendto(packet, addr)
 
 # Receive acknowledgments
+# Receive acknowledgments
 def ack_receiver():
     global send_base
     while True:
         msg, _ = UDPServerSocket.recvfrom(bufferSize)
-        ack = int(msg.decode())
-        if ack >= send_base:
-            ack_received.append(ack)
-            print(f"Acknowledgment received for packet: {ack}")
+        try:
+            ack_seq = int(msg.decode().split(':', 1)[0])
+            if ack_seq >= send_base:
+                ack_received.append(ack_seq)
+                print(f"Acknowledgment received for packet: {ack_seq}")
+        except ValueError:
+            # Handle messages that are not in the expected format
+            print(f"Ignoring unexpected message: {msg}")
+            continue
+
 
 # UDP Sender function
-def UDP_sender(filename, client_addr):
+def UDP_sender(filename, clientAddr):
     global send_base
     with open(filename, "rb") as f:
         seq = 0
@@ -55,7 +64,7 @@ def UDP_sender(filename, client_addr):
         while packets_to_send or send_base < seq:
             while packets_to_send and send_base + window_size > packets_to_send[0][0]:
                 packet_seq, packet = packets_to_send.pop(0)
-                send_packet(packet, client_addr)
+                send_packet(packet, clientAddr)
                 print(f"Sent packet {packet_seq}")
 
             # Check for acknowledgments and slide window
@@ -71,7 +80,7 @@ def UDP_sender(filename, client_addr):
             time.sleep(0.1)  # Adjust timing as needed for your network conditions
 
         # Send a final message indicating transfer completion
-        send_packet(b'END', client_addr)
+        send_packet(b'END', clientAddr)
         print("File transfer completed.")
 
 # Start acknowledgment receiver thread
@@ -84,4 +93,4 @@ print("Waiting for incoming connection...")
 data, addr = UDPServerSocket.recvfrom(bufferSize)
 if data.decode() == 'Hello':
     print(f"Connection established with {addr}")
-    UDP_sender("path/to/your/file.txt", addr)
+    UDP_sender("/root/objects/large-5.obj", addr)
