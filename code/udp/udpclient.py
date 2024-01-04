@@ -29,9 +29,16 @@ received_packets = {}
 expected_seq = 0
 file_data = []
 
+small_and_large = 0
+
 try:
     while True:
         # Receive packet from the server
+        if small_and_large == 2:
+            first_file_name = input("Please enter the file number: ")
+            UDPClientSocket.sendto(first_file_name.encode(), serverAddressPort)
+            small_and_large = 0
+
         message, address = UDPClientSocket.recvfrom(bufferSize)
         packet = message.decode()
 
@@ -42,7 +49,7 @@ try:
             #     f.writelines(file_data)
             # print("Received file saved.")
             reset_for_next_file()  # Prepare for the next file
-
+            small_and_large += 1
             continue  # Continue to receive the next file
 
         # Extract sequence number and data from the packet
