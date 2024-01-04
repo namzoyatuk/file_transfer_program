@@ -47,10 +47,6 @@ def ack_receiver():
         msg, _ = UDPServerSocket.recvfrom(bufferSize)
         decoded_msg = msg.decode()
 
-        if decoded_msg == 'Hello':
-            print("Initial connection established.")
-            continue  # Proceed to wait for the next message
-
         try:
             ack_seq = int(msg.decode().split(':', 1)[0])
             if ack_seq >= send_base:
@@ -100,6 +96,11 @@ def UDP_sender(filename, clientAddr):
         # Send a final message indicating transfer completion
         send_packet(b'END', clientAddr)
         print("File transfer completed.")
+
+msg, _ = UDPServerSocket.recvfrom(bufferSize)
+decoded_msg = msg.decode()
+if decoded_msg == 'Hello':
+    print("Initial connection established.")
 
 # Start acknowledgment receiver thread
 ack_thread = threading.Thread(target=ack_receiver)
