@@ -109,7 +109,8 @@ def UDP_sender(filename, clientAddr):
         send_packet(b'END', clientAddr)
         print("File transfer completed.")
 
-
+ack_thread = threading.Thread(target=ack_receiver)
+ack_thread.daemon = True
 
 
 while True:
@@ -124,8 +125,6 @@ while True:
         print(f"Connection established with {addr}")
         file_list = ['/root/objects/small-5.obj', '/root/objects/large-5.obj']  # Add paths to your files
         # Start acknowledgment receiver thread
-        ack_thread = threading.Thread(target=ack_receiver)
-        ack_thread.daemon = True
-        ack_thread.start()
+        restart_threads()
         handle_multiple_transfers(file_list, addr)
         stop_thread = True
