@@ -3,43 +3,66 @@
 import socket
 import hashlib
 
-HOST = "server"  # Set to the IP address of the server eth0 if you do not use docker compose 
-PORT = 8000  # Port to listen on (non-privileged ports are > 1023)
+HOST = "server"
+PORT = 8000
 
-# This implementation supports only one client
-# You have to implement threading for handling multiple TCP connections
 with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as s:
     s.bind((HOST, PORT))
     s.listen()
     conn, addr = s.accept()
+
     with conn:
         print(f"Connected by {addr}")
+
         while True:
             data = conn.recv(1024)
+
             if not data:
                 break
 
             file_num_in_string = data.decode()
-            filepath = '/root/objects/large-' + file_num_in_string + '.obj' #create the file path to read
-            print(f"Sending file at {filepath}")
-            print(f"Sending object number: {file_num_in_string}")
-            md5_path = filepath + '.md5'
 
-            # read the file data
-            with open(filepath, 'rb') as f:
-                file_data = f.read()
+            # Sending small object
+            small_filepath = '/root/objects/small-' + file_num_in_string + '.obj'
+            small_md5_path = small_filepath + '.md5'
 
-            # send file size
-            file_size = str(len(file_data)).encode()
-            conn.send(file_size)
+            print(f"Sending small file at {small_filepath}")
+            print(f"Sending small object number: {file_num_in_string}")
 
-            # read the md5 hash
-            with open(md5_path, 'r') as f:
-                md5_hash = f.read()
+            with open(small_filepath, 'rb') as f:
+                small_file_data = f.read()
 
-            # send the md5_hash stored in the server
-            conn.send(md5_hash.encode())
+            small_file_size = str(len(small_file_data)).encode()
+            conn.send(small_file_size)
+            print(f"Small file size sent: {len(small_file_data)} bytes")
 
-            # send data in chunks of 1024 bytes
-            for i in range(0, len(file_data), 1024):
-                conn.send(file_data[i:i + 1024])
+            with open(small_md5_path, 'r') as f:
+                small_md5_hash = f.read()
+            conn.send(small_md5_hash.encode())
+            print(f"Small MD5 hash sent: {small_md5_hash}")
+
+            conn.sendall(small_file_data)
+            print("Small file data sent")
+
+            # Sending large object
+            large_filepath = '/root/objects/large-' + file_num_in_string + '.obj'
+            large_md5_path = large_filepath + '.md5'
+
+            print(f"Sending large file at {large_filepath}")
+            print(f"Sending large object number: {file_num_in_string}")
+
+            with open(large_filepath, 'rb') as f:
+                large_file_data = f.read()
+
+            large_file_size = str(len(large_file_data)).encode()
+            conn.send(large_file_size)
+            print(f"Large file size sent: {len(large_file_data)} bytes")
+
+            with open(large_md5_path, 'r') as f:
+                large_md5_hash = f.read()
+            conn.send(large_md5_hash.encode())
+            print(f"Large MD5 hash sent: {large_md5_hash}")
+
+            conn.sendall(large_file_data)
+            print("Large file data sent")
+
