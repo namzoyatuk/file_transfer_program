@@ -35,9 +35,9 @@ try:
         # Check for the end of the file transfer
         if packet == 'END':
             print("File transfer completed for one file.")
-            with open('received_file.obj', 'wb') as f:  # Change the file name or add a counter to distinguish files
-                f.writelines(file_data)
-            print("Received file saved.")
+            # with open('received_file.obj', 'wb') as f:  # Change the file name or add a counter to distinguish files
+            #     f.writelines(file_data)
+            # print("Received file saved.")
             reset_for_next_file()  # Prepare for the next file
             continue  # Continue to receive the next file
 
