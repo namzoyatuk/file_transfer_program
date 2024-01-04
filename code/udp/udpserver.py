@@ -87,6 +87,8 @@ def UDP_sender(filename, clientAddr):
             seq += 1
 
         # Start sending packets
+        # TODO Resending should be implemented
+        # TODO In case of not having an ack received
         while packets_to_send or send_base < seq:
             while packets_to_send and send_base + window_size > packets_to_send[0][0]:
                 packet_seq, packet = packets_to_send.pop(0)
@@ -126,7 +128,7 @@ while True:
     print(f"Connection established with {addr}")
     large_file = '/root/objects/large-' + file_number + '.obj'
     small_file = '/root/objects/small-' + file_number + '.obj'
-    file_list = [small_file, large_file]  # Add paths to your files
+    file_list = [small_file, small_file + '.md5', large_file, large_file + '.md5']  # Add paths to your files
     # Start acknowledgment receiver thread
     restart_threads()
     handle_multiple_transfers(file_list, addr)
