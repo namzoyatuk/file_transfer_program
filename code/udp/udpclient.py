@@ -19,13 +19,18 @@ def reset_for_next_file():
 
 # Send initial hello message to server to initiate transfer
 
+
+
+first_file_name = input("Please enter the file number: ")
+UDPClientSocket.sendto(first_file_name.encode(), serverAddressPort)
+
 # Prepare to receive file
 received_packets = {}
 expected_seq = 0
 file_data = []
 
-def receive_file():
-    global expected_seq
+def receive_data():
+    global expected_seq, received_packets, file_data
     try:
         while True:
             # Receive packet from the server
@@ -35,10 +40,12 @@ def receive_file():
             # Check for the end of the file transfer
             if packet == 'END':
                 print("File transfer completed for one file.")
-                # with open('received_file.obj', 'wb') as f:  # Change the file name or add a counter to distinguish files
-                #     f.writelines(file_data)
-                # print("Received file saved.")
-                reset_for_next_file()  # Prepare for the next file
+                # Save the received data to a file
+                with open('receivedudp.obj', 'w') as f:
+                    for data in file_data:
+                        f.write(data)
+                print("Received file saved as 'receivedudp.obj'")
+                break  # Exit the function after receiving a file
 
             # Extract sequence number and data from the packet
             seq, data = packet.split(':', 1)
@@ -60,29 +67,22 @@ def receive_file():
                 # Buffer out-of-order packets
                 received_packets[seq] = data
 
-
-
     except KeyboardInterrupt:
         print("File transfer interrupted.")
 
-    finally:
-        # Save the received data to a file
-        with open('receivedudp.obj', 'w') as f:
-            for data in file_data:
-                f.write(data)
-        print("Received file saved as 'receivedudp2.obj'")
 
-
-
-first_file_name = input("Please enter the file number: ")
+first_file_name = input("Please enter the file number or type 'exit' to quit: ")
 UDPClientSocket.sendto(first_file_name.encode(), serverAddressPort)
 
 while True:
+    if first_file_name.lower() == 'exit':
+        break
+    receive_data()
+    reset_for_next_file()
 
-
-    receive_file()
-    receive_file()
-
-    first_file_name = input("Please enter the file number: ")
-    UDPClientSocket.sendto(first_file_name.encode(), serverAddressPort) # For killing the daemon thread
+    receive_data()
+    reset_for_next_file()
+    first_file_name = input("Please enter the file number or type 'bye' to quit: ")
     UDPClientSocket.sendto(first_file_name.encode(), serverAddressPort)
+    UDPClientSocket.sendto(first_file_name.encode(), serverAddressPort)
+
