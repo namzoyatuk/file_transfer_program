@@ -11,6 +11,12 @@ bufferSize = 1024
 UDPClientSocket = socket.socket(family=socket.AF_INET, type=socket.SOCK_DGRAM)
 serverAddressPort = (serverIP, serverPort)
 
+def reset_for_next_file():
+    global expected_seq, received_packets, file_data
+    expected_seq = 0
+    received_packets.clear()
+    file_data.clear()
+
 # Send initial hello message to server to initiate transfer
 helloMessage = "Hello"
 UDPClientSocket.sendto(helloMessage.encode(), serverAddressPort)
@@ -28,8 +34,12 @@ try:
 
         # Check for the end of the file transfer
         if packet == 'END':
-            print("File transfer completed.")
-            break
+            print("File transfer completed for one file.")
+            with open('received_file.obj', 'wb') as f:  # Change the file name or add a counter to distinguish files
+                f.writelines(file_data)
+            print("Received file saved.")
+            reset_for_next_file()  # Prepare for the next file
+            continue  # Continue to receive the next file
 
         # Extract sequence number and data from the packet
         seq, data = packet.split(':', 1)
@@ -50,6 +60,8 @@ try:
         else:
             # Buffer out-of-order packets
             received_packets[seq] = data
+
+
 
 except KeyboardInterrupt:
     print("File transfer interrupted.")

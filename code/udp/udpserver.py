@@ -19,6 +19,19 @@ ack_received = []
 window_size = 4  # Adjust as needed
 send_base = 0
 
+
+# Function to reset global variables for next transfer
+def reset_globals():
+    global send_base, ack_received
+    send_base = 0
+    ack_received.clear()
+# Function to handle multiple file transfers
+def handle_multiple_transfers(filenames, clientAddr):
+    for filename in filenames:
+        print(f"Starting transfer for {filename}")
+        UDP_sender(filename, clientAddr)  # Call your existing file transfer function
+        reset_globals()  # Reset global variables for the next file
+
 # Packet creation
 def create_packet(seq, data):
     return f'{seq}:{data}'.encode()
@@ -27,7 +40,6 @@ def create_packet(seq, data):
 def send_packet(packet, addr):
     UDPServerSocket.sendto(packet, addr)
 
-# Receive acknowledgments
 # Receive acknowledgments
 def ack_receiver():
     global send_base
@@ -93,4 +105,5 @@ print("Waiting for incoming connection...")
 data, addr = UDPServerSocket.recvfrom(bufferSize)
 if data.decode() == 'Hello':
     print(f"Connection established with {addr}")
-    UDP_sender("/root/objects/large-5.obj", addr)
+    file_list = ['/root/objects/large-5.obj', "'/root/objects/small-5.obj'"]  # Add paths to your files
+    handle_multiple_transfers(file_list, addr)
