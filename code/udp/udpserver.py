@@ -1,5 +1,3 @@
-#udpserver.py
-
 import socket
 import threading
 import time
@@ -7,7 +5,7 @@ import time
 # Server details
 localIP     = "server"  # Change to your server IP
 localPort   = 8000
-buffer_size  = 1024
+bufferSize  = 1024
 
 # Create a datagram socket
 UDPServerSocket = socket.socket(family=socket.AF_INET, type=socket.SOCK_DGRAM)
@@ -31,31 +29,22 @@ def send_packet(packet, addr):
 def ack_receiver():
     global send_base
     while True:
-        msg, _ = UDPServerSocket.recvfrom(buffer_size)
-        try:
-            ack_seq = int(msg.decode().split(':', 1)[0])
-            if ack_seq >= send_base:
-                ack_received.append(ack_seq)
-                print(f"Acknowledgment received for packet: {ack_seq}")
-        except ValueError:
-            # Handle messages that are not in the expected format
-            print(f"Ignoring unexpected message: {msg}")
-            continue
-
+        msg, _ = UDPServerSocket.recvfrom(bufferSize)
+        ack = int(msg.decode())
+        if ack >= send_base:
+            ack_received.append(ack)
+            print(f"Acknowledgment received for packet: {ack}")
 
 # UDP Sender function
-def UDP_sender(file_path, client_addr):
+def UDP_sender(filename, client_addr):
     global send_base
-    filename = file_path.split('/')[-1]  # Extracts file name from the path
-    send_packet(f'FILENAME:{filename}'.encode(), client_addr)
-
-    with open(file_path, "rb") as f:
+    with open(filename, "rb") as f:
         seq = 0
         packets_to_send = []
 
         # Read and packetize the entire file
         while True:
-            data = f.read(buffer_size - len(str(seq)) - 1)
+            data = f.read(bufferSize - len(str(seq)) - 1)
             if not data:
                 break
             packet = create_packet(seq, data)
@@ -85,17 +74,14 @@ def UDP_sender(file_path, client_addr):
         send_packet(b'END', client_addr)
         print("File transfer completed.")
 
+# Start acknowledgment receiver thread
+ack_thread = threading.Thread(target=ack_receiver)
+ack_thread.daemon = True
+ack_thread.start()
 
-
-while True:
-    print("Waiting for file number...")
-    number_message, client_addr = UDPServerSocket.recvfrom(buffer_size)
-    file_number = number_message.decode()
-
-    small_file_path = '/root/objects/small-' + file_number + '.obj'
-    large_file_path = '/root/objects/large-' + file_number + '.obj'
-
-    UDP_sender(small_file_path, client_addr)
-    UDP_sender(large_file_path, client_addr)
-
-
+# Wait for an incoming connection
+print("Waiting for incoming connection...")
+data, addr = UDPServerSocket.recvfrom(bufferSize)
+if data.decode() == 'Hello':
+    print(f"Connection established with {addr}")
+    UDP_sender("path/to/your/file.txt", addr)
