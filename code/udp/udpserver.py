@@ -45,6 +45,12 @@ def ack_receiver():
     global send_base
     while True:
         msg, _ = UDPServerSocket.recvfrom(bufferSize)
+        decoded_msg = msg.decode()
+
+        if decoded_msg == 'Hello':
+            print("Initial connection established.")
+            continue  # Proceed to wait for the next message
+
         try:
             ack_seq = int(msg.decode().split(':', 1)[0])
             if ack_seq >= send_base:
