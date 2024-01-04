@@ -19,10 +19,6 @@ def reset_for_next_file():
 
 # Send initial hello message to server to initiate transfer
 
-
-
-
-
 def receive_file():
     try:
         while True:
@@ -70,15 +66,16 @@ def receive_file():
                 f.write(data)
         print("Received file saved as 'receivedudp2.obj'")
 
+# Prepare to receive file
+received_packets = {}
+expected_seq = 0
+file_data = []
 
 first_file_name = input("Please enter the file number: ")
 UDPClientSocket.sendto(first_file_name.encode(), serverAddressPort)
 
 while True:
-    # Prepare to receive file
-    received_packets = {}
-    expected_seq = 0
-    file_data = []
+
 
     receive_file()
     receive_file()
