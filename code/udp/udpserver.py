@@ -19,6 +19,15 @@ ack_received = []
 window_size = 4  # Adjust as needed
 send_base = 0
 
+stop_thread = False
+
+def restart_threads():
+    global stop_thread, ack_thread
+    stop_thread = False  # Reset the flag
+    ack_thread = threading.Thread(target=ack_receiver)  # Recreate the thread
+    ack_thread.daemon = True
+    ack_thread.start()
+
 
 # Function to reset global variables for next transfer
 def reset_globals():
@@ -43,7 +52,10 @@ def send_packet(packet, addr):
 # Receive acknowledgments
 def ack_receiver():
     global send_base
+    global stop_thread
     while True:
+        if stop_thread:
+            break
         msg, _ = UDPServerSocket.recvfrom(bufferSize)
         decoded_msg = msg.decode()
 
@@ -112,3 +124,4 @@ if data.decode() == 'Hello':
     ack_thread.daemon = True
     ack_thread.start()
     handle_multiple_transfers(file_list, addr)
+    stop_thread = True
