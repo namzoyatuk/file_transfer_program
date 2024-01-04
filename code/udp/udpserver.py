@@ -1,9 +1,11 @@
+#udpserver.py
+
 import socket
 import threading
 import time
 
 # Server details
-localIP     = "127.0.0.1"  # Change to your server IP
+localIP     = "server"  # Change to your server IP
 localPort   = 8000
 bufferSize  = 1024
 
@@ -26,14 +28,21 @@ def send_packet(packet, addr):
     UDPServerSocket.sendto(packet, addr)
 
 # Receive acknowledgments
+# Receive acknowledgments
 def ack_receiver():
     global send_base
     while True:
         msg, _ = UDPServerSocket.recvfrom(bufferSize)
-        ack = int(msg.decode())
-        if ack >= send_base:
-            ack_received.append(ack)
-            print(f"Acknowledgment received for packet: {ack}")
+        try:
+            ack_seq = int(msg.decode().split(':', 1)[0])
+            if ack_seq >= send_base:
+                ack_received.append(ack_seq)
+                print(f"Acknowledgment received for packet: {ack_seq}")
+        except ValueError:
+            # Handle messages that are not in the expected format
+            print(f"Ignoring unexpected message: {msg}")
+            continue
+
 
 # UDP Sender function
 def UDP_sender(filename, clientAddr):
@@ -84,4 +93,4 @@ print("Waiting for incoming connection...")
 data, addr = UDPServerSocket.recvfrom(bufferSize)
 if data.decode() == 'Hello':
     print(f"Connection established with {addr}")
-    UDP_sender("path/to/your/file.txt", addr)
+    UDP_sender("/root/objects/large-5.obj", addr)
