@@ -121,10 +121,13 @@ while True:
     if data.decode() == 'bye':
         break
 
-    if data.decode() == 'Hello':
-        print(f"Connection established with {addr}")
-        file_list = ['/root/objects/small-5.obj', '/root/objects/large-5.obj']  # Add paths to your files
-        # Start acknowledgment receiver thread
-        restart_threads()
-        handle_multiple_transfers(file_list, addr)
-        stop_thread = True
+
+    file_number = data.decode()
+    print(f"Connection established with {addr}")
+    large_file = '/root/objects/large' + file_number + '.obj'
+    small_file = '/root/objects/small' + file_number + '.obj'
+    file_list = [large_file, small_file]  # Add paths to your files
+    # Start acknowledgment receiver thread
+    restart_threads()
+    handle_multiple_transfers(file_list, addr)
+    stop_thread = True
