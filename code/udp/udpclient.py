@@ -42,9 +42,6 @@ try:
             #     f.writelines(file_data)
             # print("Received file saved.")
             reset_for_next_file()  # Prepare for the next file
-            first_file_name = input("Please enter the file number: ")
-            UDPClientSocket.sendto(first_file_name.encode(), serverAddressPort)
-            UDPClientSocket.sendto(first_file_name.encode(), serverAddressPort)
 
             continue  # Continue to receive the next file
 
