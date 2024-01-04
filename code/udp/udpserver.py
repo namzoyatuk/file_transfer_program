@@ -97,20 +97,18 @@ def UDP_sender(filename, clientAddr):
         send_packet(b'END', clientAddr)
         print("File transfer completed.")
 
-msg, _ = UDPServerSocket.recvfrom(bufferSize)
-decoded_msg = msg.decode()
-if decoded_msg == 'Hello':
-    print("Initial connection established.")
 
-# Start acknowledgment receiver thread
-ack_thread = threading.Thread(target=ack_receiver)
-ack_thread.daemon = True
-ack_thread.start()
+
 
 # Wait for an incoming connection
 print("Waiting for incoming connection...")
 data, addr = UDPServerSocket.recvfrom(bufferSize)
+
 if data.decode() == 'Hello':
     print(f"Connection established with {addr}")
     file_list = ['/root/objects/small-5.obj', '/root/objects/large-5.obj']  # Add paths to your files
+    # Start acknowledgment receiver thread
+    ack_thread = threading.Thread(target=ack_receiver)
+    ack_thread.daemon = True
+    ack_thread.start()
     handle_multiple_transfers(file_list, addr)
