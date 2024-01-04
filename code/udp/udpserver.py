@@ -124,8 +124,8 @@ while True:
 
     file_number = data.decode()
     print(f"Connection established with {addr}")
-    large_file = '/root/objects/large' + file_number + '.obj'
-    small_file = '/root/objects/small' + file_number + '.obj'
+    large_file = '/root/objects/large-' + file_number + '.obj'
+    small_file = '/root/objects/small-' + file_number + '.obj'
     file_list = [large_file, small_file]  # Add paths to your files
     # Start acknowledgment receiver thread
     restart_threads()
