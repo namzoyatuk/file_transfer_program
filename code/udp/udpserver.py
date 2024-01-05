@@ -87,7 +87,7 @@ def UDP_sender(filename, clientAddr):
 
         # Read and packetize the entire file
         while True:
-            data = f.read(bufferSize - len(str(seq)) - 32 - 1) ##????
+            data = f.read(bufferSize - len(str(seq)) - 32) ##????
             if not data:
                 break
             packet = create_packet(seq, data)
