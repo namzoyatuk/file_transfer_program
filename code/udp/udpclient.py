@@ -43,7 +43,7 @@ def end_of_file_handling(small_and_large, file_name, file_data):
     print(file_data)
     if small_and_large == 0:
         print("File transfer completed for small-" + file_name + ".obj")
-        with open('received_file.obj', 'wb') as f:  # Change the file name or add a counter to distinguish files
+        with open('received_file.obj', 'w') as f:  # Change the file name or add a counter to distinguish files
             f.writelines(file_data)
         print("Received file saved.")
         # Prepare for the next file
@@ -97,6 +97,7 @@ try:
 
         message, address = UDPClientSocket.recvfrom(bufferSize)
         packet = message.decode()
+        print(packet)
 
         # Check for the end of the file transfer
         # TODO md5 checking should be implemented
