@@ -38,30 +38,31 @@ def integrity_check(file_path, hash_path):
 
 
 def end_of_file_handling(small_and_large, file_name, file_data):
+    print(file_data)
     print("END OF FILE HANDLING WORKING")
     if small_and_large == 0:
         print("File transfer completed for small-" + file_name + ".obj")
-        with open("small-" + file_name + ".obj", 'wb') as f:
+        with open("small-" + file_name + ".obj", 'w') as f:
             for data in file_data:
                 f.write(data)
         print("Received file saved.")
         # Prepare for the next file
     elif small_and_large == 1:
         print("File transfer completed for small-" + file_name + ".obj.md5")
-        with open("small-" + file_name + ".obj.md5", 'wb') as f:
+        with open("small-" + file_name + ".obj.md5", 'w') as f:
             for data in file_data:
                 f.write(data)
         print("Received file saved.")
         print(integrity_check("small-" + file_name + ".obj", "small-" + file_name + ".obj.md5"))
     elif small_and_large == 2:
         print("File transfer completed for large-" + file_name + ".obj")
-        with open("large-" + file_name + ".obj", 'wb') as f:
+        with open("large-" + file_name + ".obj", 'w') as f:
             for data in file_data:
                 f.write(data)
         print("Received file saved.")
     else:
         print("File transfer completed for large-" + file_name + ".obj.md5")
-        with open("large-" + file_name + ".obj.md5", 'wb') as f:
+        with open("large-" + file_name + ".obj.md5", 'w') as f:
             for data in file_data:
                 f.write(data)
         print("Received file saved.")
