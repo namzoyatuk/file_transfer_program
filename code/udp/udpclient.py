@@ -69,7 +69,7 @@ try:
         # Check for the end of the file transfer
         # TODO md5 checking should be implemented
         if packet == 'END':
-            end_of_file_handling(small_and_large, file_name)
+            end_of_file_handling(small_and_large, file_name, file_data)
             small_and_large += 1
             continue  # Continue to receive the next file
 
