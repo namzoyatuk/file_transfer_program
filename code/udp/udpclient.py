@@ -42,26 +42,29 @@ def end_of_file_handling(small_and_large, file_name, file_data):
     print("END OF FILE HANDLING WORKING")
     if small_and_large == 0:
         print("File transfer completed for small-" + file_name + ".obj")
-        with open("small-" + file_name + ".obj", 'wb') as f:
+        with open("small-" + file_name + ".obj", 'w') as f:
             for data in file_data:
                 f.write(data)
         print("Received file saved.")
         # Prepare for the next file
     elif small_and_large == 1:
         print("File transfer completed for small-" + file_name + ".obj.md5")
-        with open("small-" + file_name + ".obj.md5", 'wb') as f:
-            f.write(file_data)
+        with open("small-" + file_name + ".obj.md5", 'w') as f:
+            for data in file_data:
+                f.write(data)
         print("Received file saved.")
         print(integrity_check("small-" + file_name + ".obj", "small-" + file_name + ".obj.md5"))
     elif small_and_large == 2:
         print("File transfer completed for large-" + file_name + ".obj")
-        with open("large-" + file_name + ".obj", 'wb') as f:
-            f.write(file_data)
+        with open("large-" + file_name + ".obj", 'w') as f:
+            for data in file_data:
+                f.write(data)
         print("Received file saved.")
     else:
         print("File transfer completed for large-" + file_name + ".obj.md5")
-        with open("large-" + file_name + ".obj.md5", 'wb') as f:
-            f.write(file_data)
+        with open("large-" + file_name + ".obj.md5", 'w') as f:
+            for data in file_data:
+                f.write(data)
         print("Received file saved.")
         print(integrity_check("large-" + file_name + ".obj", "large-" + file_name + ".obj.md5"))
 
@@ -77,7 +80,7 @@ UDPClientSocket.sendto(file_name.encode(), serverAddressPort)
 # Prepare to receive file
 received_packets = {}
 expected_seq = 0
-file_data = b""
+file_data = []
 
 small_and_large = 0
 
@@ -123,7 +126,7 @@ try:
 
         # If this is the next expected packet, save the data
         if seq == expected_seq:
-            file_data += data
+            file_data.append(data)
             expected_seq += 1
 
             # Check for any buffered packets
