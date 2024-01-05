@@ -118,10 +118,13 @@ def UDP_sender(filename, clientAddr):
 
         # Send a final message indicating transfer completion
         send_packet(b'END', clientAddr)
-        print("File transfer completed.")
         end_time = time.time()
         if 'md5' not in filename:
             print(f"{filename}, completed in {end_time - start_time} secs")
+        elif 'large' in filename:
+            print(f"{filename}, LARGE FILE completed in {end_time - start_time} secs")
+        elif 'small' in filename:
+            print(f"{filename}, LARGE FILE completed in {end_time - start_time} secs")
 
 ack_thread = threading.Thread(target=ack_receiver)
 ack_thread.daemon = True
