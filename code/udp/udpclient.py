@@ -120,7 +120,6 @@ try:
             print("Received:", received_packet_checksum)
             print("Calc.led:", calculated_packet_checksum)
             print(f"Checksum failed for packet {seq}")
-            continue  # nack???
         # Send acknowledgment back to the server
         UDPClientSocket.sendto(str(seq).encode(), address)
 
