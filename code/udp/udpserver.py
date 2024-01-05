@@ -76,7 +76,7 @@ def ack_receiver():
 # UDP Sender function
 def UDP_sender(filename, clientAddr):
     global send_base
-    with open(filename, "rb") as f:
+    with open(filename, "r") as f:
         seq = 0
         packets_to_send = []
 
