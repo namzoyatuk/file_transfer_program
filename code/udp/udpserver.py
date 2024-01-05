@@ -16,7 +16,7 @@ print("UDP server up and listening")
 
 # Global variables for managing acknowledgments and window
 ack_received = []
-window_size = 4  # Adjust as needed
+window_size = 4
 send_base = 0
 
 stop_thread = False

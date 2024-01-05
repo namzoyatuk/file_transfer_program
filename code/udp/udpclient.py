@@ -20,6 +20,25 @@ def reset_for_next_file():
 # Send initial hello message to server to initiate transfer
 
 
+def end_of_file_handling(small_and_large, file_name):
+
+    if small_and_large == 0:
+        print("File transfer completed for small-" + file_name + ".obj")
+        # with open('received_file.obj', 'w') as f:  #
+        #     f.writelines(file_data)
+        # print("Received file saved.")
+        reset_for_next_file()  # Prepare for the next file
+    elif small_and_large == 1:
+        print("File transfer completed for small-" + file_name + ".obj.md5")
+    elif small_and_large == 2:
+        print("File transfer completed for large-" + file_name + ".obj")
+    else:
+        print("File transfer completed for large-" + file_name + ".obj.md5")
+
+    small_and_large += 1
+
+
+
 
 file_name = input("Please enter the file number: ")
 UDPClientSocket.sendto(file_name.encode(), serverAddressPort)
@@ -46,13 +65,9 @@ try:
         packet = message.decode()
 
         # Check for the end of the file transfer
+        # TODO md5 checking should be implemented
         if packet == 'END':
-            print("File transfer completed for one file.")
-            # with open('received_file.obj', 'wb') as f:  # Change the file name or add a counter to distinguish files
-            #     f.writelines(file_data)
-            # print("Received file saved.")
-            reset_for_next_file()  # Prepare for the next file
-            small_and_large += 1
+            end_of_file_handling(small_and_large, file_name)
             continue  # Continue to receive the next file
 
         # Extract sequence number and data from the packet
