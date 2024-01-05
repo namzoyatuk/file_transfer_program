@@ -120,7 +120,8 @@ def UDP_sender(filename, clientAddr):
         send_packet(b'END', clientAddr)
         print("File transfer completed.")
         end_time = time.time()
-        print(f"{filename}, completed in {end_time - start_time} secs")
+        if 'md5' not in filename:
+            print(f"{filename}, completed in {end_time - start_time} secs")
 
 ack_thread = threading.Thread(target=ack_receiver)
 ack_thread.daemon = True
