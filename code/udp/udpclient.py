@@ -46,6 +46,7 @@ def end_of_file_handling(small_and_large, file_name, file_data):
         with open('received_file.obj', 'w') as f:  # Change the file name or add a counter to distinguish files
             for data in file_data:
                 print(data)
+                print("CHUNK ENDED")
                 f.write(data)
         print("Received file saved.")
         # Prepare for the next file
