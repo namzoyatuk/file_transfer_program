@@ -35,7 +35,7 @@ def end_of_file_handling(small_and_large, file_name):
     else:
         print("File transfer completed for large-" + file_name + ".obj.md5")
 
-    small_and_large += 1
+
 
 
 
@@ -68,6 +68,7 @@ try:
         # TODO md5 checking should be implemented
         if packet == 'END':
             end_of_file_handling(small_and_large, file_name)
+            small_and_large += 1
             continue  # Continue to receive the next file
 
         # Extract sequence number and data from the packet
