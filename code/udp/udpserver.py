@@ -51,7 +51,6 @@ def handle_multiple_transfers(filenames, clientAddr):
 # Packet creation
 def create_packet(seq, data):
     checksum = hashlib.md5(data.encode()).hexdigest()
-    print("Sent chunk: ", data)
     return f'{seq}:{checksum}:{data}'.encode()
 
 # Send packet
