@@ -20,14 +20,14 @@ def reset_for_next_file():
 # Send initial hello message to server to initiate transfer
 
 
-def end_of_file_handling(small_and_large, file_name):
-
+def end_of_file_handling(small_and_large, file_name, file_data):
+    print("END OF FILE HANDLING WORKING")
     if small_and_large == 0:
         print("File transfer completed for small-" + file_name + ".obj")
         # with open('received_file.obj', 'w') as f:  #
         #     f.writelines(file_data)
         # print("Received file saved.")
-        reset_for_next_file()  # Prepare for the next file
+        # Prepare for the next file
     elif small_and_large == 1:
         print("File transfer completed for small-" + file_name + ".obj.md5")
     elif small_and_large == 2:
@@ -35,6 +35,7 @@ def end_of_file_handling(small_and_large, file_name):
     else:
         print("File transfer completed for large-" + file_name + ".obj.md5")
 
+    reset_for_next_file()
 
 
 
@@ -52,6 +53,7 @@ small_and_large = 0
 
 try:
     while True:
+        print("END OF FILE HANDLING WORKING")
         # Receive packet from the server
         if small_and_large == 4:
             # a flag for both small and large object has been sent and
@@ -95,10 +97,3 @@ try:
 
 except KeyboardInterrupt:
     print("File transfer interrupted.")
-
-finally:
-    # Save the received data to a file
-    with open('receivedudp.obj', 'w') as f:
-        for data in file_data:
-            f.write(data)
-    print("Received file saved as 'receivedudp2.obj'")
