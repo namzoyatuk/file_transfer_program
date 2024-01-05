@@ -72,6 +72,7 @@ def ack_receiver():
             if ack_seq >= send_base:
                 ack_received.append(ack_seq)
                 print(f"Acknowledgment received for packet: {ack_seq}")
+                packet_status[ack_seq] = True
         except ValueError:
             # Handle messages that are not in the expected format
             print(f"Ignoring unexpected message: {msg}")
