@@ -44,7 +44,7 @@ def end_of_file_handling(small_and_large, file_name, file_data):
         print("File transfer completed for small-" + file_name + ".obj")
         with open("small-" + file_name + ".obj", 'w') as f:
             for data in file_data:
-                print(data)
+                print(str(data))
                 f.write(data)
         print("Received file saved.")
         # Prepare for the next file
