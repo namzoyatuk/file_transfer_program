@@ -120,11 +120,10 @@ def UDP_sender(filename, clientAddr):
         send_packet(b'END', clientAddr)
         end_time = time.time()
         if 'md5' not in filename:
-            print(f"{filename}, completed in {end_time - start_time} secs")
-        elif 'large' in filename:
-            print(f"{filename}, LARGE FILE completed in {end_time - start_time} secs")
-        elif 'small' in filename:
-            print(f"{filename}, LARGE FILE completed in {end_time - start_time} secs")
+            if 'large' in filename:
+                print(f"{filename}, LARGE FILE completed in {end_time - start_time} secs")
+            if 'small' in filename:
+                print(f"{filename}, LARGE FILE completed in {end_time - start_time} secs")
 
 ack_thread = threading.Thread(target=ack_receiver)
 ack_thread.daemon = True
