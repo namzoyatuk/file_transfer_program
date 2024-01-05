@@ -43,10 +43,8 @@ def end_of_file_handling(small_and_large, file_name, file_data):
     print(file_data)
     if small_and_large == 0:
         print("File transfer completed for small-" + file_name + ".obj")
-        with open('received_file.obj', 'w') as f:  # Change the file name or add a counter to distinguish files
+        with open("small-" + file_name + ".obj", 'w') as f:  # Change the file name or add a counter to distinguish files
             for data in file_data:
-                print(data)
-                print("CHUNK ENDED")
                 f.write(data) # ??
         print("Received file saved.")
         # Prepare for the next file
@@ -55,7 +53,6 @@ def end_of_file_handling(small_and_large, file_name, file_data):
         with open("small-" + file_name + ".obj.md5", 'w') as f:
             for data in file_data:
                 print(data)
-                print("CHUNK ENDED")
                 f.write(data)
         print("Received file saved.")
         print(integrity_check("small-" + file_name + ".obj", "small-" + file_name + ".obj.md5"))
@@ -63,16 +60,12 @@ def end_of_file_handling(small_and_large, file_name, file_data):
         print("File transfer completed for large-" + file_name + ".obj")
         with open("large-" + file_name + ".obj", 'w') as f:
             for data in file_data:
-                print(data)
-                print("CHUNK ENDED")
                 f.write(data)
         print("Received file saved.")
     else:
         print("File transfer completed for large-" + file_name + ".obj.md5")
         with open("large-" + file_name + ".obj.md5", 'w') as f:
             for data in file_data:
-                print(data)
-                print("CHUNK ENDED")
                 f.write(data)
         print("Received file saved.")
         print(integrity_check("large-" + file_name + ".obj", "large-" + file_name + ".obj.md5"))
