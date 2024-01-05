@@ -105,9 +105,20 @@ try:
             continue  # Continue to receive the next file
 
         # Extract sequence number and data from the packet
-        seq, data = packet.split(':', 1)
+        parts = packet.split(':', 2)
+        if len(parts) != 3:
+            print("Invalid packet format")
+            continue
+
+        seq, received_packet_checksum, data = parts
+
         seq = int(seq)
 
+        calculated_packet_checksum = hashlib.md5(data).hexdigest()
+
+        if received_packet_checksum != calculated_packet_checksum:
+            print(f"Checksum failed for packet {seq}")
+            continue  # nack???
         # Send acknowledgment back to the server
         UDPClientSocket.sendto(str(seq).encode(), address)
 

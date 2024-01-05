@@ -1,5 +1,5 @@
 #udpserver.py
-
+import hashlib
 import socket
 import threading
 import time
@@ -44,7 +44,8 @@ def handle_multiple_transfers(filenames, clientAddr):
 
 # Packet creation
 def create_packet(seq, data):
-    return f'{seq}:{data}'.encode()
+    checksum = hashlib.md5(data).hexdigest()
+    return f'{seq}:{checksum}:{data}'.encode()
 
 # Send packet
 def send_packet(packet, addr):
