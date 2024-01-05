@@ -100,8 +100,8 @@ def UDP_sender(filename, clientAddr):
         # TODO Resending should be implemented
         # TODO In case of not having an ack received
         while send_base < seq:
-            if seq_number < seq:
-                for seq_number in range(send_base, send_base + window_size):
+            for seq_number in range(send_base, send_base + window_size):
+                if seq_number < seq:
                     if not packet_status[seq_number]:
                         current_time = time.time()
                         if current_time - last_packet_sent_time[seq_number] > timeout_duration:
@@ -112,9 +112,9 @@ def UDP_sender(filename, clientAddr):
                     elif seq_number == send_base and packet_status[seq_number] == True:
                         send_base += 1
 
-                # If all packets are sent and acknowledged
-                if send_base >= seq:
-                    break
+            # If all packets are sent and acknowledged
+            if send_base >= seq:
+                break
 
             time.sleep(0.1)  # Adjust timing as needed for your network conditions
 
