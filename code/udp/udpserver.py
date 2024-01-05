@@ -68,7 +68,6 @@ def ack_receiver():
             ack_seq = int(msg.decode().split(':', 1)[0])
             if ack_seq >= send_base:
                 ack_received.append(ack_seq)
-                print(f"Acknowledgment received for packet: {ack_seq}")
                 packet_status[ack_seq] = True
         except ValueError:
             # Handle messages that are not in the expected format
@@ -106,7 +105,7 @@ def UDP_sender(filename, clientAddr):
                         if current_time - last_packet_sent_time[seq_number] > timeout_duration:
                             packet_seq, packet = packets_to_send[seq_number]
                             send_packet(packet, clientAddr)
-                            print(f"Sent packet {packet_seq}")
+                            #print(f"Sent packet {packet_seq}")
                             last_packet_sent_time[packet_seq] = current_time
                     elif seq_number == send_base and packet_status[seq_number] == True:
                         send_base += 1
