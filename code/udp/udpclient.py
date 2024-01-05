@@ -19,7 +19,7 @@ def reset_for_next_file():
     file_data.clear()
 
 def integrity_check(file_path, hash_path):
-    with open(file_path, 'r') as f:
+    with open(file_path, 'rb') as f:
         file_data = f.read()
 
     with open(hash_path, 'r') as f:
