@@ -44,7 +44,8 @@ def end_of_file_handling(small_and_large, file_name, file_data):
     if small_and_large == 0:
         print("File transfer completed for small-" + file_name + ".obj")
         with open('received_file.obj', 'w') as f:  # Change the file name or add a counter to distinguish files
-            f.writelines(file_data)
+            for data in file_data:
+                f.write(data)
         print("Received file saved.")
         # Prepare for the next file
     elif small_and_large == 1:
@@ -96,7 +97,6 @@ try:
             small_and_large = 0
 
         message, address = UDPClientSocket.recvfrom(bufferSize)
-        print("before;decode", message)
         packet = message.decode()
         print(packet)
 
