@@ -22,10 +22,10 @@ def integrity_check(file_path, hash_path):
     with open(file_path, 'rb') as f:
         file_data = f.read()
 
-    with open(hash_path, 'r') as f:
+    with open(hash_path, 'rb') as f:
         md5_hash = f.read()
 
-    md5_hash = md5_hash.strip()
+    md5_hash = md5_hash.decode().strip()
     calculated_hash = hashlib.md5(file_data).hexdigest()
 
     print(md5_hash)
