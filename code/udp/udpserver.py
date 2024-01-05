@@ -43,7 +43,6 @@ def reset_globals():
 # Function to handle multiple file transfers
 def handle_multiple_transfers(filenames, clientAddr):
     for filename in filenames:
-        print(f"Starting transfer for {filename}")
         reset_globals()  # Reset global variables for the next file (consider to put it below)
         UDP_sender(filename, clientAddr)  # Call your existing file transfer function
 
@@ -123,7 +122,7 @@ def UDP_sender(filename, clientAddr):
             if 'large' in filename:
                 print(f"{filename}, LARGE FILE completed in {end_time - start_time} secs")
             if 'small' in filename:
-                print(f"{filename}, LARGE FILE completed in {end_time - start_time} secs")
+                print(f"{filename}, SMALL FILE completed in {end_time - start_time} secs")
 
 ack_thread = threading.Thread(target=ack_receiver)
 ack_thread.daemon = True
