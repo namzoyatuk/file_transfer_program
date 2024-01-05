@@ -132,23 +132,21 @@ try:
             print(f"Checksum failed for packet {seq}")
         elif received_packet_checksum == calculated_packet_checksum:
             print(f"CHECKSUM SUCCESSFUL FOR PACKET {seq}")
-        # Send acknowledgment back to the server
-        # TODO In the case where packet is not correct
-        # TODO Nack or not sending ack is to be implemented
-        UDPClientSocket.sendto(str(seq).encode(), address)
+            # Send acknowledgment back to the server
+            UDPClientSocket.sendto(str(seq).encode(), address)
 
-        # If this is the next expected packet, save the data
-        if seq == expected_seq:
-            file_data.append(data)
-            expected_seq += 1
-
-            # Check for any buffered packets
-            while expected_seq in received_packets:
-                file_data.append(received_packets.pop(expected_seq))
+            # If this is the next expected packet, save the data
+            if seq == expected_seq:
+                file_data.append(data)
                 expected_seq += 1
-        else:
-            # Buffer out-of-order packets
-            received_packets[seq] = data
+
+                # Check for any buffered packets
+                while expected_seq in received_packets:
+                    file_data.append(received_packets.pop(expected_seq))
+                    expected_seq += 1
+            else:
+                # Buffer out-of-order packets
+                received_packets[seq] = data
 
 
 
