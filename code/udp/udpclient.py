@@ -85,7 +85,6 @@ small_and_large = 0
 
 try:
     while True:
-        print("PACKET RECEIVER LOOP WORKING !!!!")
         # Receive packet from the server
         if small_and_large == 4:
             # a flag for both small and large object has been sent and
