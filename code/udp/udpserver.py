@@ -18,15 +18,21 @@ print("UDP server up and listening")
 ack_received = []
 window_size = 4
 send_base = 0
+packet_status = {}
+last_packet_sent_time = {}  # Dictionary to store the last sent time for each packet
+timeout_duration = 1.0
 
 stop_thread = False
 
 def restart_threads():
-    global stop_thread, ack_thread
+    global stop_thread, ack_thread, packet_status, last_packet_sent_time, timeout_duration
     stop_thread = False  # Reset the flag
     ack_thread = threading.Thread(target=ack_receiver)  # Recreate the thread
     ack_thread.daemon = True
     ack_thread.start()
+    packet_status = {}
+    last_packet_sent_time = {}  #
+    timeout_duration = 1.0
 
 
 # Function to reset global variables for next transfer
@@ -53,8 +59,7 @@ def send_packet(packet, addr):
 
 # Receive acknowledgments
 def ack_receiver():
-    global send_base
-    global stop_thread
+    global send_base, packet_status, stop_thread
     while True:
         if stop_thread:
             break
@@ -82,30 +87,41 @@ def UDP_sender(filename, clientAddr):
 
         # Read and packetize the entire file
         while True:
-            data = f.read(bufferSize - len(str(seq)) - 32 - 1)
+            data = f.read(bufferSize - len(str(seq)) - 32 - 1) ##????
             if not data:
                 break
             packet = create_packet(seq, data)
             packets_to_send.append((seq, packet))
+            last_packet_sent_time[seq] = -2
+            packet_status[seq] = False
             seq += 1
 
         # Start sending packets
         # TODO Resending should be implemented
         # TODO In case of not having an ack received
-        while packets_to_send or send_base < seq:
-            while packets_to_send and send_base + window_size > packets_to_send[0][0]:
-                packet_seq, packet = packets_to_send.pop(0)
-                send_packet(packet, clientAddr)
-                print(f"Sent packet {packet_seq}")
+        while send_base < seq:
+            for seq_number in range(send_base, send_base + window_size):
+                if seq_number < seq:
+                    packet_seq, packet = packets_to_send[seq]
+                    send_packet(packet, clientAddr)
+                    print(f"Sent packet {packet_seq}")
+                    packet_status[packet_seq] = False
+                    last_packet_sent_time[packet_seq] = time.time()
 
-            # Check for acknowledgments and slide window
-            ack_received.sort()
-            while ack_received and ack_received[0] == send_base:
-                send_base += 1
-                ack_received.pop(0)
+
+            for seq_number in range(send_base, send_base + window_size):
+                if not packet_status[seq_number]:
+                    current_time = time.time()
+                    if current_time - last_packet_sent_time[seq] > timeout_duration:
+                        packet_seq, packet = packets_to_send[seq]
+                        send_packet(packet, clientAddr)
+                        print(f"Sent packet {packet_seq}")
+                        last_packet_sent_time[packet_seq] = current_time
+                elif seq_number == send_base and packet_status[seq_number] == True:
+                    send_base += 1
 
             # If all packets are sent and acknowledged
-            if send_base >= seq and not packets_to_send:
+            if send_base >= seq:
                 break
 
             time.sleep(0.1)  # Adjust timing as needed for your network conditions
