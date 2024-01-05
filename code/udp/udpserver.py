@@ -38,8 +38,9 @@ def reset_globals():
 def handle_multiple_transfers(filenames, clientAddr):
     for filename in filenames:
         print(f"Starting transfer for {filename}")
+        reset_globals()  # Reset global variables for the next file (consider to put it below)
         UDP_sender(filename, clientAddr)  # Call your existing file transfer function
-        reset_globals()  # Reset global variables for the next file
+
 
 # Packet creation
 def create_packet(seq, data):
