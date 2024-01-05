@@ -82,6 +82,8 @@ expected_seq = 0
 file_data = []
 
 small_and_large = 0
+files = 0
+run = 0
 
 try:
     while True:
@@ -89,7 +91,13 @@ try:
         if small_and_large == 4:
             # a flag for both small and large object has been sent and
             # asks for new file input
-            file_name = input("Please enter the file number: ")
+            file_name = str(files)
+            files += 1
+            if files == 10:
+                run += 1
+                if run == 3:
+                    break
+                files = 0
             UDPClientSocket.sendto(file_name.encode(), serverAddressPort) # a random message to kill daemon thread
             UDPClientSocket.sendto(file_name.encode(), serverAddressPort)
             small_and_large = 0
