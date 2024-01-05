@@ -114,7 +114,7 @@ try:
 
         seq = int(seq)
 
-        calculated_packet_checksum = hashlib.md5(data).hexdigest()
+        calculated_packet_checksum = hashlib.md5(data.encode()).hexdigest()
 
         if received_packet_checksum != calculated_packet_checksum:
             print(f"Checksum failed for packet {seq}")
