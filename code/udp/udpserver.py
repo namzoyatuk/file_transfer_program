@@ -63,7 +63,6 @@ def ack_receiver():
     while True:
         if stop_thread:
             break
-        print(f"Waiting for ack...")
         msg, _ = UDPServerSocket.recvfrom(bufferSize)
         try:
             ack_seq = int(msg.decode().split(':', 1)[0])
@@ -79,6 +78,7 @@ def ack_receiver():
 
 # UDP Sender function
 def UDP_sender(filename, clientAddr):
+    start_time = time.time()
     global send_base
     with open(filename, "r") as f:
         seq = 0
@@ -120,6 +120,8 @@ def UDP_sender(filename, clientAddr):
         # Send a final message indicating transfer completion
         send_packet(b'END', clientAddr)
         print("File transfer completed.")
+        end_time = time.time()
+        print(f"{filename}, completed in {end_time - start_time} secs")
 
 ack_thread = threading.Thread(target=ack_receiver)
 ack_thread.daemon = True
