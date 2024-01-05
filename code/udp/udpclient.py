@@ -52,7 +52,7 @@ def end_of_file_handling(small_and_large, file_name, file_data):
             for data in file_data:
                 f.write(data)
         print("Received file saved.")
-        print(integrity_check("large-" + file_name + ".obj", "large-" + file_name + ".obj.md5"))
+        print(integrity_check("small-" + file_name + ".obj", "small-" + file_name + ".obj.md5"))
     elif small_and_large == 2:
         print("File transfer completed for large-" + file_name + ".obj")
         with open("large-" + file_name + ".obj", 'w') as f:
