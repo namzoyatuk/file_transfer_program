@@ -38,12 +38,13 @@ def integrity_check(file_path, hash_path):
 
 
 def end_of_file_handling(small_and_large, file_name, file_data):
-    print(file_data)
+
     print("END OF FILE HANDLING WORKING")
     if small_and_large == 0:
         print("File transfer completed for small-" + file_name + ".obj")
         with open("small-" + file_name + ".obj", 'w') as f:
             for data in file_data:
+                print(data)
                 f.write(data)
         print("Received file saved.")
         # Prepare for the next file
