@@ -56,6 +56,7 @@ def ack_receiver():
     while True:
         if stop_thread:
             break
+        print(f"Waiting for ack...")
         msg, _ = UDPServerSocket.recvfrom(bufferSize)
         decoded_msg = msg.decode()
 
