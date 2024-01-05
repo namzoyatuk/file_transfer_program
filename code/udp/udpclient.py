@@ -44,7 +44,8 @@ def end_of_file_handling(small_and_large, file_name, file_data):
     full_data = b''  # Start with an empty byte string
     for data in file_data:
         print(data)
-        data.encode()
+        data = data.encode()
+        print("ENCODED:", data)
         full_data += data
     if small_and_large == 0:
         print("File transfer completed for small-" + file_name + ".obj")
