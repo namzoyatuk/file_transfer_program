@@ -16,7 +16,7 @@ print("UDP server up and listening")
 
 # Global variables for managing acknowledgments and window
 ack_received = []
-window_size = 6
+window_size = 7
 send_base = 0
 packet_status = {}
 last_packet_sent_time = {}  # Dictionary to store the last sent time for each packet
