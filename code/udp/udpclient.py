@@ -40,17 +40,11 @@ def integrity_check(file_path, hash_path):
 def end_of_file_handling(small_and_large, file_name, file_data):
 
     print("END OF FILE HANDLING WORKING")
-
-    full_data = b''  # Start with an empty byte string
-    for data in file_data:
-        print(data)
-        data = data.encode()
-        print("ENCODED:", data)
-        full_data += data
+    print(file_data)
     if small_and_large == 0:
         print("File transfer completed for small-" + file_name + ".obj")
-        with open("small-" + file_name + ".obj", 'wb') as f:
-            f.write(full_data)
+        with open('received_file.obj', 'wb') as f:  # Change the file name or add a counter to distinguish files
+            f.writelines(file_data)
         print("Received file saved.")
         # Prepare for the next file
     elif small_and_large == 1:
