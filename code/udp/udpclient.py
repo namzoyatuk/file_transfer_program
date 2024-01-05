@@ -19,7 +19,7 @@ def reset_for_next_file():
     file_data.clear()
 
 def integrity_check(file_path, hash_path):
-    with open(file_path, 'rb') as f:
+    with open(file_path, 'r') as f:
         file_data = f.read()
 
     with open(hash_path, 'r') as f:
@@ -52,7 +52,7 @@ def end_of_file_handling(small_and_large, file_name, file_data):
             for data in file_data:
                 f.write(data)
         print("Received file saved.")
-        integrity_check("small-" + file_name + ".obj", "small-" + file_name + ".obj.md5")
+        print(integrity_check("large-" + file_name + ".obj", "large-" + file_name + ".obj.md5"))
     elif small_and_large == 2:
         print("File transfer completed for large-" + file_name + ".obj")
         with open("large-" + file_name + ".obj", 'w') as f:
@@ -65,7 +65,7 @@ def end_of_file_handling(small_and_large, file_name, file_data):
             for data in file_data:
                 f.write(data)
         print("Received file saved.")
-        integrity_check("large-" + file_name + ".obj", "large-" + file_name + ".obj.md5")
+        print(integrity_check("large-" + file_name + ".obj", "large-" + file_name + ".obj.md5"))
 
     reset_for_next_file()
 
