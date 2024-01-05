@@ -96,7 +96,7 @@ try:
             small_and_large = 0
 
         message, address = UDPClientSocket.recvfrom(bufferSize)
-        print("before;decode", packet)
+        print("before;decode", message)
         packet = message.decode()
         print(packet)
 
