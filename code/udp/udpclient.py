@@ -130,7 +130,7 @@ try:
             print("Received:", received_packet_checksum)
             print("Calc.led:", calculated_packet_checksum)
             print(f"Checksum failed for packet {seq}")
-        else:
+        elif received_packet_checksum == calculated_packet_checksum:
             print(f"CHECKSUM SUCCESSFUL FOR PACKET {seq}")
         # Send acknowledgment back to the server
         # TODO In the case where packet is not correct
