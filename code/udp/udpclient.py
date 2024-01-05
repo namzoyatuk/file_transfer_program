@@ -117,6 +117,8 @@ try:
         calculated_packet_checksum = hashlib.md5(data.encode()).hexdigest()
 
         if received_packet_checksum != calculated_packet_checksum:
+            print("Received:", received_packet_checksum)
+            print("Calc.led:", calculated_packet_checksum)
             print(f"Checksum failed for packet {seq}")
             continue  # nack???
         # Send acknowledgment back to the server
