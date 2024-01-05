@@ -17,7 +17,7 @@ def reset_for_next_file():
     received_packets.clear()
     file_data.clear()
 
-# Send initial hello message to server to initiate transfer
+
 
 
 def end_of_file_handling(small_and_large, file_name, file_data):
@@ -53,7 +53,7 @@ small_and_large = 0
 
 try:
     while True:
-        print("END OF FILE HANDLING WORKING")
+        print("PACKET RECEIVER LOOP WORKING !!!!")
         # Receive packet from the server
         if small_and_large == 4:
             # a flag for both small and large object has been sent and
