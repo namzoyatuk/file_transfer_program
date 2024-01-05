@@ -47,13 +47,15 @@ def end_of_file_handling(small_and_large, file_name, file_data):
             for data in file_data:
                 print(data)
                 print("CHUNK ENDED")
-                f.write(data)
+                f.write(data) # ??
         print("Received file saved.")
         # Prepare for the next file
     elif small_and_large == 1:
         print("File transfer completed for small-" + file_name + ".obj.md5")
         with open("small-" + file_name + ".obj.md5", 'w') as f:
             for data in file_data:
+                print(data)
+                print("CHUNK ENDED")
                 f.write(data)
         print("Received file saved.")
         print(integrity_check("small-" + file_name + ".obj", "small-" + file_name + ".obj.md5"))
@@ -61,12 +63,16 @@ def end_of_file_handling(small_and_large, file_name, file_data):
         print("File transfer completed for large-" + file_name + ".obj")
         with open("large-" + file_name + ".obj", 'w') as f:
             for data in file_data:
+                print(data)
+                print("CHUNK ENDED")
                 f.write(data)
         print("Received file saved.")
     else:
         print("File transfer completed for large-" + file_name + ".obj.md5")
         with open("large-" + file_name + ".obj.md5", 'w') as f:
             for data in file_data:
+                print(data)
+                print("CHUNK ENDED")
                 f.write(data)
         print("Received file saved.")
         print(integrity_check("large-" + file_name + ".obj", "large-" + file_name + ".obj.md5"))
@@ -124,7 +130,11 @@ try:
             print("Received:", received_packet_checksum)
             print("Calc.led:", calculated_packet_checksum)
             print(f"Checksum failed for packet {seq}")
+        else:
+            print(f"CHECKSUM SUCCESSFUL FOR PACKET {seq}")
         # Send acknowledgment back to the server
+        # TODO In the case where packet is not correct
+        # TODO Nack or not sending ack is to be implemented
         UDPClientSocket.sendto(str(seq).encode(), address)
 
         # If this is the next expected packet, save the data
