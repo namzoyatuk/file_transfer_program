@@ -32,9 +32,9 @@ def integrity_check(file_path, hash_path):
     print("Calculated:", calculated_hash)
 
     if md5_hash == calculated_hash:
-        return "Integrity check is successful!"
+        return f"Integrity check is successful! for {file_path}"
     else:
-        return "Integrity check failed!"
+        return f"Integrity check failed! for {file_path}"
 
 
 def end_of_file_handling(small_and_large, file_name, file_data):
