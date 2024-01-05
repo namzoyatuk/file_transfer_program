@@ -99,7 +99,6 @@ try:
 
         message, address = UDPClientSocket.recvfrom(bufferSize)
         packet = message.decode()
-        print(packet)
 
         # Check for the end of the file transfer
         # TODO md5 checking should be implemented
